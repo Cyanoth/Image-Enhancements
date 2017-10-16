@@ -21,8 +21,9 @@ public class CustomImage {
             gsPixel = new int[imgWidth][imgHeight]; //Create an array which has the space of the image.
 
             for (int x = 0; x < imgWidth; x++)
-                for (int y = 0; y < imgHeight; y++)
+                for (int y = 0; y < imgHeight; y++) {
                     gsPixel[x][y] = img.getData().getSample(x, y, 0);
+                }
 
         }
         catch (IOException e) {
@@ -48,6 +49,15 @@ public class CustomImage {
     public int getGsPixelValue(int x, int y)
     {
         return gsPixel[x][y];
+    }
+
+    public int gsToRGB(int val)
+    {
+        int rgb = val;
+        rgb = (rgb << 8) + val;
+        rgb = (rgb << 8) + val;
+
+        return rgb;
     }
 
     public void outputPixelArray()
