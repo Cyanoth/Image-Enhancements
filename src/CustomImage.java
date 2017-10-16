@@ -51,11 +51,20 @@ public class CustomImage {
         return gsPixel[x][y];
     }
 
-    public int gsToRGB(int val)
+    public int getRGBPixelValue(int x, int y)
     {
-        int rgb = val;
-        rgb = (rgb << 8) + val;
-        rgb = (rgb << 8) + val;
+        int rgb =  gsPixel[x][y];
+        rgb = (rgb << 8) +  gsPixel[x][y];
+        rgb = (rgb << 8) +  gsPixel[x][y];
+
+        return rgb;
+    }
+
+    public int getRGBPixelValue(int[][] array, int x, int y)
+    {
+        int rgb =  array[x][y];
+        rgb = (rgb << 8) +  array[x][y];
+        rgb = (rgb << 8) +  array[x][y];
 
         return rgb;
     }
@@ -74,6 +83,26 @@ public class CustomImage {
                 else
                 {
                     System.out.print(gsPixel[x][y]  + "  ");
+                    lineCounter++;
+                }
+            }
+    }
+
+
+    public void outputPixelArray(int[][] array)
+    {
+        int lineCounter = 0;
+
+        for (int y = 0; y < imgHeight; y++)
+            for (int x = 0; x < imgWidth; x++) {
+                if (lineCounter == imgWidth)
+                {
+                    System.out.println(array[x][y]);
+                    lineCounter = 0;
+                }
+                else
+                {
+                    System.out.print(array[x][y]  + "  ");
                     lineCounter++;
                 }
             }
