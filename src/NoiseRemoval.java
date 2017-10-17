@@ -11,7 +11,7 @@ public class NoiseRemoval {
 
         CustomImage imageFile = new CustomImage("C:\\Users\\Charlie\\IdeaProjects\\ImageAnalysisCW\\res\\PandaNoise.bmp");
         //ApplyUnweightedMeanAverage(imageFile);
-        ApplyMedianFilter(imageFile);
+        ApplyWeightedMeanAverage(imageFile);
     }
 
     public static void ApplyUnweightedMeanAverage(CustomImage img) throws IOException {
@@ -41,7 +41,38 @@ public class NoiseRemoval {
     }
 
     public static void ApplyWeightedMeanAverage(CustomImage img) {
-        //TODO: each neighbour has an associated weight
+        System.out.println("Processing: Apply Weighted-Mean Filter");
+        int[] weights = { 1, 2, 1, 2, 4, 2, 1, 2, 1 };
+
+        //iY = Image Y, iX = Image X, bY = Neighbour-Box Y, bX = Neighbour-Box X.
+        for (int iY = 0; iY < img.getHeight(); iY++) //For each pixel in the Image (Height then Row)
+            for (int iX = 0; iX < img.getWidth(); iX++)
+             {
+                int pixelSum = 0;
+                int totalCount = 0;
+                int weightCounter = 0;
+
+                //Use Math Max/Min functions to ensure it doesn't no out of bounds...
+                for(int bY = Math.max(0, iY - 1); bY < Math.min(img.getHeight(), iY + 2); bY++) //might be iY+1+1
+                    for(int bX = Math.max(0, iX -1); bX < Math.min(img.getWidth(), + iX + 2); bX++)
+                    {
+
+
+                        pixelSum += img.getPixelGrayscaleVal(bX, bY, img.getPixelArray()) * weights[weightCounter];
+                        totalCount += weights[weightCounter];
+                        //System.out.println("OPix: " + img.getPixelGrayscaleVal(bX, bY, img.getPixelArray()) + " Psum: " + pixelSum + " totalCount: " + totalCount + " weightCounter: " + weightCounter);
+                        weightCounter++;
+                    }
+                pixelSum = Math.min(255, Math.round(pixelSum / totalCount));
+
+                if (iX == 137 && iY == 76)
+                    System.out.println("\n\nx 137, y 76 TotalElements:" + totalCount + " sum total: " + pixelSum);
+
+                img.setModifyPixel(iX, iY, pixelSum);
+            }
+
+        img.outputModifiedImage(true);
+        System.out.println("Completed: Weighted-Mean Filter");
 
     }
 
@@ -87,10 +118,11 @@ public class NoiseRemoval {
                 img.setModifyPixel(iX, iY, medianValue);
 
                 if (iX == 137 && iY == 76)
-                    System.out.println("\n\nx 176, y 76 neighbours:" + Arrays.toString(neighboursValues) + " median is... " + medianValue);
+                    System.out.println("\n\nx 137, y 76 neighbours:" + Arrays.toString(neighboursValues) + " median is... " + medianValue);
             }
-            img.outputModifiedImage(true);
 
+        img.outputModifiedImage(true);
+        System.out.println("Completed: Apply Median Filter");
     }
 
     public static void ApplyPrewittOperator(CustomImage img) {
