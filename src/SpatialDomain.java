@@ -5,14 +5,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import javax.imageio.ImageIO;
 
-public class NoiseRemoval {
-
-    public static void main(String[] args) throws IOException {
-
-        CustomImage imageFile = new CustomImage("C:\\Users\\Charlie\\IdeaProjects\\ImageAnalysisCW\\res\\PandaNoise.bmp");
-        //ApplyUnweightedMeanAverage(imageFile);
-        ApplyWeightedMeanAverage(imageFile);
-    }
+public class SpatialDomain {
 
     public static void ApplyUnweightedMeanAverage(CustomImage img) throws IOException {
         System.out.println("Processing: Apply Unweighted Mean Average");
@@ -56,8 +49,6 @@ public class NoiseRemoval {
                 for(int bY = Math.max(0, iY - 1); bY < Math.min(img.getHeight(), iY + 2); bY++) //might be iY+1+1
                     for(int bX = Math.max(0, iX -1); bX < Math.min(img.getWidth(), + iX + 2); bX++)
                     {
-
-
                         pixelSum += img.getPixelGrayscaleVal(bX, bY, img.getPixelArray()) * weights[weightCounter];
                         totalCount += weights[weightCounter];
                         //System.out.println("OPix: " + img.getPixelGrayscaleVal(bX, bY, img.getPixelArray()) + " Psum: " + pixelSum + " totalCount: " + totalCount + " weightCounter: " + weightCounter);
@@ -125,7 +116,34 @@ public class NoiseRemoval {
         System.out.println("Completed: Apply Median Filter");
     }
 
-    public static void ApplyPrewittOperator(CustomImage img) {
-        //TODO
+    public static void ApplyBaudLimit(CustomImage img, int minValue, int maxValue) {
+        System.out.println("Processing: Apply Baud-Limit Filter");
+        if (minValue < 0 || maxValue > 255){
+            System.out.println("Invalid number assignment, please try again!");
+            return;
+        }
+
+        //iY = Image Y, iX = Image X, bY = Neighbour-Box Y, bX = Neighbour-Box X.
+        for (int iY = 0; iY < img.getHeight(); iY++) //For each pixel in the Image (Height then Row)
+            for (int iX = 0; iX < img.getWidth(); iX++)
+            {
+                 //Use Math Max/Min functions to ensure it doesn't no out of bounds...
+                for(int bY = Math.max(0, iY - 1); bY < Math.min(img.getHeight(), iY + 2); bY++) //might be iY+1+1
+                    for(int bX = Math.max(0, iX -1); bX < Math.min(img.getWidth(), + iX + 2); bX++)
+                    {
+                        int pixelValue = img.getPixelGrayscaleVal(bX, bY, img.getPixelArray());
+                        img.setModifyPixel(bX, bY, pixelValue);
+
+                        if (pixelValue < minValue)
+                            img.setModifyPixel(bX, bY, minValue);
+
+                        if (img.getPixelGrayscaleVal(bX, bY, img.getPixelArray()) > maxValue)
+                            img.setModifyPixel(bX, bY, maxValue);
+                    }
+              }
+
+            img.outputModifiedImage(true);
+        System.out.println("Completed: Apply Baud-Limit Filter");
+
     }
 }
