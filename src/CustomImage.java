@@ -1,3 +1,6 @@
+import Catalano.Imaging.FastBitmap;
+import Catalano.Imaging.Filters.FourierTransform;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -13,6 +16,9 @@ public class CustomImage {
     private int[][] pixelArray;
     private int[][] modPixelArray;
 
+    private FastBitmap fourierBitmap;
+    private FourierTransform fourierTransform;
+
     public CustomImage(String imgPath)
     {
         BufferedImage img = null;
@@ -22,6 +28,8 @@ public class CustomImage {
             imgHeight = img.getHeight();
             pixelArray = new int[imgWidth][imgHeight]; //Instantiate two arrays WxH
             modPixelArray = new int[imgWidth][imgHeight];
+            fourierBitmap = new FastBitmap(imgPath);
+
 
             for (int x = 0; x < imgWidth; x++)
                 for (int y = 0; y < imgHeight; y++) {
@@ -44,6 +52,8 @@ public class CustomImage {
     } //Return the height of the image (px)
     public int[][] getPixelArray() { return pixelArray; } //Return original, unmodified pixel array for read-only
     public int[][] getModifiedPixelArray() { return modPixelArray; } //Return modified pixel array
+    public FastBitmap getFourierBitmap() { return fourierBitmap; }
+    public FourierTransform getFourierTransform() { return fourierTransform;}
 
     public int getPixelGrayscaleVal(int x, int y, int[][] pixelArr)
     {
@@ -93,6 +103,67 @@ public class CustomImage {
             System.out.println("An error occurred during picture export... " + e);
         }
     }
+
+    public FourierTransform toFourierForm() {
+        System.out.println("Converting to a Fourier Transform... May take a few seconds...!");
+        fourierTransform = new FourierTransform(getFourierBitmap());
+        fourierTransform.Forward();
+        System.out.println("Fourier Transform has completed");
+
+        try {
+            File outputFile = new File("C:\\Users\\Charlie\\IdeaProjects\\ImageAnalysisCW\\res\\fourierOutput.bmp");
+            FastBitmap outputImg = fourierTransform.toFastBitmap();
+            ImageIO.write(outputImg.toBufferedImage(), "bmp", outputFile);
+            Desktop dt = Desktop.getDesktop();
+            dt.open(outputFile);
+        }
+         catch (IOException e) {
+            System.out.println("An error occurred during picture export... " + e);
+        }
+
+        return fourierTransform;
+    }
+
+    public void openFilteredFourier() {
+        try {
+            File outputFile = new File("C:\\Users\\Charlie\\IdeaProjects\\ImageAnalysisCW\\res\\fourierFilter.bmp");
+            FastBitmap outputImg = fourierTransform.toFastBitmap();
+            ImageIO.write(outputImg.toBufferedImage(), "bmp", outputFile);
+            Desktop dt = Desktop.getDesktop();
+            dt.open(outputFile);
+        }
+        catch (IOException e) {
+            System.out.println("An error occurred during picture export... " + e);
+        }
+    }
+
+    public void fourierToImage()
+    {
+        System.out.println("Fourier Transform to Image... May take a few seconds...!");
+
+        fourierTransform.Backward();
+        try {
+            File outputFile = new File("C:\\Users\\Charlie\\IdeaProjects\\ImageAnalysisCW\\res\\fourierResult.bmp");
+            FastBitmap outputImg = fourierTransform.toFastBitmap();
+            ImageIO.write(outputImg.toBufferedImage(), "bmp", outputFile);
+            Desktop dt = Desktop.getDesktop();
+            dt.open(outputFile);
+        }
+        catch (IOException e) {
+            System.out.println("An error occurred during picture export... " + e);
+        }
+
+        System.out.println("Fourier Transform to Image has completed");
+
+
+    }
+
+
+
+//    public void fourierTransformImageToSpatialArray()
+//    {
+//
+//    }
 
     public void outToConsole(int[][] array)
     {
