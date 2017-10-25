@@ -13,7 +13,7 @@ public class FrequencyDomain {
         FrequencyFilter fFilter = new FrequencyFilter(minFreq, maxFreq);
         fFilter.ApplyInPlace(img.toFourierForm());
         img.openFilteredFourier();
-        img.fourierToImage();
+        img.fourierToImage(true);
 
         System.out.println("The fourier filter was completed!");
 

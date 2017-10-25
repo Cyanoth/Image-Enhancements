@@ -137,7 +137,7 @@ public class CustomImage {
         }
     }
 
-    public void fourierToImage()
+    public void fourierToImage(Boolean setImgArray)
     {
         System.out.println("Fourier Transform to Image... May take a few seconds...!");
 
@@ -148,6 +148,15 @@ public class CustomImage {
             ImageIO.write(outputImg.toBufferedImage(), "bmp", outputFile);
             Desktop dt = Desktop.getDesktop();
             dt.open(outputFile);
+
+            if (setImgArray)
+            {
+                System.out.println("Overwriting the image array with fourier transform variant");
+                for (int x = 0; x < imgWidth; x++)
+                    for (int y = 0; y < imgHeight; y++) {
+                        pixelArray[x][y] = outputImg.toBufferedImage().getData().getSample(x, y, 0); //Read each pixel as grayscale and store in array.
+                    }
+            }
         }
         catch (IOException e) {
             System.out.println("An error occurred during picture export... " + e);
@@ -158,12 +167,10 @@ public class CustomImage {
 
     }
 
+    public void fourierTransformImageToSpatialArray()
+    {
 
-
-//    public void fourierTransformImageToSpatialArray()
-//    {
-//
-//    }
+    }
 
     public void outToConsole(int[][] array)
     {

@@ -15,6 +15,8 @@ public class MainApplication {
       //  SpatialDomain.ApplyBaudLimit(imageFile, 50, 190);
 
         FrequencyDomain.applyFourierFilter(imageFile, 50, 255);
+        SpatialDomain.ApplyMedianFilter(imageFile);
+        System.out.println("All tasks completed!");
     }
 
 
