@@ -104,15 +104,17 @@ public class SpatialDomain {
                 }
 
                 int medianValue = -1;
-                int selectValue = -1;
 
                 //If odd count, Calculate Median
                 if (neighbourCount %2 == 1)
-                    selectValue = neighbourCount / 2;
+                    medianValue = neighboursValues[((neighbourCount + 1) / 2)];
                 else //If even amount of neighbours (elements)
-                    selectValue = (neighbourCount + 1) /2;
+                {
+                    int val1 = neighboursValues[((neighbourCount) / 2)];
+                    int val2 = neighboursValues[((neighbourCount /2) + 1)];
+                    medianValue = Math.round(val1/val2);
+                }
 
-                medianValue = neighboursValues[selectValue];
                 img.setModifyPixel(iX, iY, medianValue);
             }
 

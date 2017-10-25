@@ -19,7 +19,8 @@ public class MainApplication {
                 "C:\\Users\\Charlie\\IdeaProjects\\ImageAnalysisCW\\res\\"); //Load an Image.
 
 
-        FrequencyDomain.applyFourierFilter(imageFile, 0, 40);
+        SpatialDomain.ApplyMedianFilter(imageFile);
+//        FrequencyDomain.applyFourierFilter(imageFile, 0, 40);
         System.out.println("All tasks completed!");
     }
 
