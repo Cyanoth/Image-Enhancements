@@ -7,6 +7,13 @@ import java.io.IOException;
 
 public class FrequencyDomain {
 
+    /**
+     * Apply a Fourier Filter transformation to the image.
+     * @param img CustomImage file (a loaded bitmap file)
+     * @param minFreq The minimum frequency, anything BELOW will be removed
+     * @param maxFreq The maximum frequency, anything ABOVE will be removed.
+     * @throws IOException On error.
+     */
     public static void applyFourierFilter(CustomImage img, int minFreq, int maxFreq) throws IOException {
         System.out.println("Applying a Fourier Filter. minFreq: " + minFreq + " maxFreq: " + maxFreq);
 

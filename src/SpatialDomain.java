@@ -7,6 +7,11 @@ import javax.imageio.ImageIO;
 
 public class SpatialDomain {
 
+    /**
+     * Neighbourhood fixed radius of 1, calculates the mean unweighted average of a pixel.
+     * @param img Custom Bitmap Image Object
+     * @throws IOException
+     */
     public static void ApplyUnweightedMeanAverage(CustomImage img) throws IOException {
         System.out.println("Processing: Apply Unweighted Mean Average");
         //iY = Image Y, iX = Image X, bY = Neighbour-Box Y, bX = Neighbour-Box X.
@@ -24,18 +29,22 @@ public class SpatialDomain {
                         neighbourCount++;
                     }
 
-                img.setModifyPixel(iX, iY, Math.round(pixelSum / neighbourCount));
+                img.setModifyPixel(iX, iY, Math.round(pixelSum / neighbourCount)); //Set modified Pixel to the mean value.
             }
 
         //img.outToConsole(img.getModifiedPixelArray());
-        img.outputModifiedImage(true);
-        System.out.println("\n\nx: 137, y:76 equal " + img.getPixelGrayscaleVal(137, 76, img.getModifiedPixelArray()));
+        img.outputModifiedImage();
         System.out.println("Completed: Apply Unweighted Mean Average");
     }
 
+    /**
+     * Neighbourhood fixed radius of 1, calculates the mean (fixed) weighted average of a pixel.
+     * @param img Custom Bitmap Image Object
+     * @throws IOException
+     */
     public static void ApplyWeightedMeanAverage(CustomImage img) {
         System.out.println("Processing: Apply Weighted-Mean Filter");
-        int[] weights = { 1, 2, 1, 2, 4, 2, 1, 2, 1 };
+        int[] weights = { 1, 2, 1, 2, 4, 2, 1, 2, 1 }; //Weights going from top-left to bottom-right (see documentation)
 
         //iY = Image Y, iX = Image X, bY = Neighbour-Box Y, bX = Neighbour-Box X.
         for (int iY = 0; iY < img.getHeight(); iY++) //For each pixel in the Image (Height then Row)
@@ -51,22 +60,21 @@ public class SpatialDomain {
                     {
                         pixelSum += img.getPixelGrayscaleVal(bX, bY, img.getPixelArray()) * weights[weightCounter];
                         totalCount += weights[weightCounter];
-                        //System.out.println("OPix: " + img.getPixelGrayscaleVal(bX, bY, img.getPixelArray()) + " Psum: " + pixelSum + " totalCount: " + totalCount + " weightCounter: " + weightCounter);
                         weightCounter++;
                     }
-                pixelSum = Math.min(255, Math.round(pixelSum / totalCount));
-
-                if (iX == 137 && iY == 76)
-                    System.out.println("\n\nx 137, y 76 TotalElements:" + totalCount + " sum total: " + pixelSum);
+                pixelSum = Math.min(255, Math.round(pixelSum / totalCount)); //Set modified Pixel to the mean value.
 
                 img.setModifyPixel(iX, iY, pixelSum);
             }
 
-        img.outputModifiedImage(true);
+        img.outputModifiedImage();
         System.out.println("Completed: Weighted-Mean Filter");
-
     }
 
+    /**
+     * Neighbourhood fixed radius of 1, calculates the median of a pixel.
+     * @param img Custom Bitmap Image Object
+     */
     public static void ApplyMedianFilter(CustomImage img)  {
         System.out.println("Processing: Apply Median Filter");
 
@@ -84,7 +92,7 @@ public class SpatialDomain {
                         neighbourCount++;
                     }
 
-                //Sort the array (bubble-sort) to prepare to calculate a median
+                //Sort the array (using bubble-sort) to prepare to calculate a median
                 for (int i = neighbourCount; i >= 0; i--) {
                     for (int j = 1; j < i; j++) {
                         if (neighboursValues[j - 1] > neighboursValues[j]) {
@@ -97,28 +105,30 @@ public class SpatialDomain {
 
                 int medianValue = -1;
                 int selectValue = -1;
-                //If odd count
+
+                //If odd count, Calculate Median
                 if (neighbourCount %2 == 1)
                     selectValue = neighbourCount / 2;
                 else //If even amount of neighbours (elements)
                     selectValue = (neighbourCount + 1) /2;
 
                 medianValue = neighboursValues[selectValue];
-
-
                 img.setModifyPixel(iX, iY, medianValue);
-
-                if (iX == 137 && iY == 76)
-                    System.out.println("\n\nx 137, y 76 neighbours:" + Arrays.toString(neighboursValues) + " median is... " + medianValue);
             }
 
-        img.outputModifiedImage(true);
+        img.outputModifiedImage();
         System.out.println("Completed: Apply Median Filter");
     }
 
+    /**
+     * Applies a Limit Filter to the image (min & max filter)
+     * @param img Custom Bitmap Image Object
+     * @param minValue Minimum value of pixel. Anything BELOW will be set to this value.
+     * @param maxValue Maximum value of a pixel. Anything ABOVE will be set to this value.
+     */
     public static void ApplyBaudLimit(CustomImage img, int minValue, int maxValue) {
         System.out.println("Processing: Apply Baud-Limit Filter");
-        if (minValue < 0 || maxValue > 255){
+        if (minValue < 0 || maxValue > 255){ //Min & Max must be between 0-255
             System.out.println("Invalid number assignment, please try again!");
             return;
         }
@@ -132,17 +142,17 @@ public class SpatialDomain {
                     for(int bX = Math.max(0, iX -1); bX < Math.min(img.getWidth(), + iX + 2); bX++)
                     {
                         int pixelValue = img.getPixelGrayscaleVal(bX, bY, img.getPixelArray());
-                        img.setModifyPixel(bX, bY, pixelValue);
+                        img.setModifyPixel(bX, bY, pixelValue); //Set modified pixel as origianl pixel (changed if required below)
 
-                        if (pixelValue < minValue)
+                        if (pixelValue < minValue) //If below min val, set this pixel as min value
                             img.setModifyPixel(bX, bY, minValue);
 
-                        if (img.getPixelGrayscaleVal(bX, bY, img.getPixelArray()) > maxValue)
+                        if (img.getPixelGrayscaleVal(bX, bY, img.getPixelArray()) > maxValue) //If above max val, set this pixel as max value.
                             img.setModifyPixel(bX, bY, maxValue);
                     }
               }
 
-            img.outputModifiedImage(true);
+        img.outputModifiedImage();
         System.out.println("Completed: Apply Baud-Limit Filter");
 
     }
