@@ -1,3 +1,6 @@
+import Catalano.Imaging.FastBitmap;
+import Catalano.Imaging.Filters.FrequencyFilter;
+
 import java.io.IOException;
 
 /**
@@ -9,7 +12,10 @@ public class MainApplication {
 
         CustomImage imageFile = new CustomImage("C:\\Users\\Charlie\\IdeaProjects\\ImageAnalysisCW\\res\\PandaNoise.bmp");
         //ApplyUnweightedMeanAverage(imageFile);
-        SpatialDomain.ApplyBaudLimit(imageFile, 50, 190);
+      //  SpatialDomain.ApplyBaudLimit(imageFile, 50, 190);
+        FastBitmap fb = new FastBitmap("C:\\Users\\Charlie\\IdeaProjects\\ImageAnalysisCW\\res\\PandaNoise.bmp");
+
+        FrequencyDomain.applyFourierFilter(FrequencyDomain.generateFourier(fb, true), 50, 255);
     }
 
 
