@@ -15,16 +15,16 @@ public class MainApplication {
      */
     public static void main(String[] args) throws IOException {
 
-        CustomImage originalImage = new CustomImage("C:\\Users\\Charlie\\IdeaProjects\\ImageAnalysisCW\\res\\PandaOriginal.bmp",
-                "C:\\Users\\Charlie\\IdeaProjects\\ImageAnalysisCW\\res\\"); //Load an Image.
+        //CustomImage originalImage = new CustomImage("C:\\Users\\Charlie\\IdeaProjects\\ImageAnalysisCW\\res\\PenguinOriginal.bmp",
+        //      "C:\\Users\\Charlie\\IdeaProjects\\ImageAnalysisCW\\res\\"); //Load an Image.
 
-        CustomImage noisyImage = new CustomImage("C:\\Users\\Charlie\\IdeaProjects\\ImageAnalysisCW\\res\\PandaNoise.bmp",
+        CustomImage noisyImage = new CustomImage("C:\\Users\\Charlie\\IdeaProjects\\ImageAnalysisCW\\res\\PenguinNoise.bmp",
                 "C:\\Users\\Charlie\\IdeaProjects\\ImageAnalysisCW\\res\\"); //Load an Image.
 
         FrequencyDomain.applyFourierFilter(noisyImage, 0, 40);
         SpatialDomain.ApplyMedianFilter(noisyImage);
 
-        calculateRMSE(originalImage.getWidth(), originalImage.getHeight(), originalImage.getPixelArray(), noisyImage.getPixelArray());
+        //calculateRMSE(originalImage.getWidth(), originalImage.getHeight(), originalImage.getPixelArray(), noisyImage.getModifiedPixelArray());
 
         System.out.println("All tasks completed!");
     }
