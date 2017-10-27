@@ -83,7 +83,7 @@ public class CustomImage {
         //Since all images for the coursework are grayscale, the value for RGB are all the same.
         //This simply sets each of the RGB Components to the same value (required for image output)...
         int rgb =  pixelArr[x][y];
-        rgb = (rgb << 8) + pixelArr[x][y];
+        rgb = (rgb << 8) + pixelArr[x][y]; //Code Ref [3]
         rgb = (rgb << 8) +  pixelArr[x][y];
 
         return rgb; //Get the RGB value (0-255) in an array from the parameter pixelArr
